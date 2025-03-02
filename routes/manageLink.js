@@ -17,14 +17,29 @@ module.exports = (db) => {
     }
   });
 
-    router.get("/get-all-link", async (req, res) => {
-      try {
-        const links = await linkCollection.find().toArray();
-        res.send(links);
-      } catch (error) {
-        res.status(500).send({ error: "Failed to get links" });
-      }
-    });
+  //get all links
+  router.get("/get-all-link", async (req, res) => {
+    try {
+      const links = await linkCollection.find().toArray();
+      res.send(links);
+    } catch (error) {
+      res.status(500).send({ error: "Failed to get links" });
+    }
+  });
+
+  //get public links
+  router.get("/get-public-link", async (req, res) => {
+    try {
+      const links = await linkCollection
+        .find({
+          privacy: "public",
+        })
+        .toArray();
+      res.send(links);
+    } catch (error) {
+      res.status(500).send({ error: "Failed to get links" });
+    }
+  });
 
   return router;
 };
