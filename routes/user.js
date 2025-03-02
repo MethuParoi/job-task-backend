@@ -62,18 +62,18 @@ module.exports = (db) => {
     }
   });
 
-  //-------------------post task----------------
-  router.post("/post-task/:email", async (req, res) => {
+  //-------------------post link----------------
+  router.post("/post-link/:email", async (req, res) => {
     try {
       const email = req.params.email;
       const query = { email: email };
       const user = await userCollection.findOne(query);
-      const newTask = Array.isArray(req.body.task)
-        ? req.body.task
-        : [req.body.task];
+      const newLink = Array.isArray(req.body.link)
+        ? req.body.link
+        : [req.body.link];
       const update = {
         $set: {
-          task: user && user.task ? [...user.task, ...newTask] : newTask,
+          link: user && user.link ? [...user.link, ...newLink] : newLink,
         },
       };
       const result = await userCollection.updateOne(query, update, {
@@ -81,12 +81,12 @@ module.exports = (db) => {
       });
       res.send(result);
     } catch (error) {
-      res.status(500).send({ error: "Failed to update task" });
+      res.status(500).send({ error: "Failed to update link" });
     }
   });
 
-  //------------------get task-------------------
-  router.get("/get-task/:email", async (req, res) => {
+  //------------------get link-------------------
+  router.get("/get-link/:email", async (req, res) => {
     try {
       const email = req.params.email;
       const query = { email: email };
@@ -94,11 +94,13 @@ module.exports = (db) => {
       if (!user) {
         return res.status(404).send({ error: "User not found" });
       }
-      res.send(user.task);
+      res.send(user.link);
     } catch (error) {
-      res.status(500).send({ error: "Failed to get task" });
+      res.status(500).send({ error: "Failed to get link" });
     }
   });
+
+  //-------------------------------------
 
   //get single task by task id
   router.get("/get-task/:email/:taskId", async (req, res) => {
