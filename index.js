@@ -7,6 +7,7 @@ const connectToDatabase = require("./database/mongoClient");
 const authRoutes = require("./routes/auth");
 const userRoutes = require("./routes/user");
 const uploadRoutes = require("./routes/upload");
+const linkRoutes = require("./routes/manageLink");
 
 const app = express();
 
@@ -30,6 +31,7 @@ async function main() {
     app.use("/api/auth", authRoutes);
     app.use("/api/upload", uploadRoutes);
     app.use("/api/user", userRoutes(db));
+    app.use("/api/link", linkRoutes(db));
 
     //err handle
     app.get("/favicon.ico", (req, res) => res.status(204).end());
