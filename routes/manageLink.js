@@ -10,7 +10,9 @@ module.exports = (db) => {
   async function deleteExpiredLinks() {
     try {
       const now = new Date();
-      const result = await linkCollection.deleteMany({ expiresAt: { $lt: now } });
+      const result = await linkCollection.deleteMany({
+        expiresAt: { $lt: now },
+      });
 
       if (result.deletedCount > 0) {
         console.log(`Deleted ${result.deletedCount} expired links`);
@@ -20,19 +22,19 @@ module.exports = (db) => {
     }
   }
 
-  setInterval(deleteExpiredLinks, 10 * 60 * 1000); 
+  setInterval(deleteExpiredLinks, 10 * 60 * 1000);
 
   // Add link
-//   router.post("/add-link", async (req, res) => {
-//     try {
-//       const newLink = req.body;
-//       const result = await linkCollection.insertOne(newLink);
-//       res.send(result);
-//     } catch (error) {
-//       res.status(500).send({ error: "Failed to add link" });
-//     }
-//   });
- router.post("/add-link", async (req, res) => {
+  //   router.post("/add-link", async (req, res) => {
+  //     try {
+  //       const newLink = req.body;
+  //       const result = await linkCollection.insertOne(newLink);
+  //       res.send(result);
+  //     } catch (error) {
+  //       res.status(500).send({ error: "Failed to add link" });
+  //     }
+  //   });
+  router.post("/add-link", async (req, res) => {
     try {
       const { privacy, fileLink, fileName, user, linkId, expiresAt } = req.body;
 
@@ -52,7 +54,6 @@ module.exports = (db) => {
       res.status(500).send({ error: "Failed to add link" });
     }
   });
-};
 
   //get all links
   router.get("/get-all-link", async (req, res) => {
@@ -82,7 +83,8 @@ module.exports = (db) => {
   router.delete("/delete-link/:id", async (req, res) => {
     try {
       const id = req.params.id;
-      const query = { _id: ObjectId(id) };
+      const linkIdNum = Number(id);
+      const query = { linkId: linkIdNum };
 
       const result = await linkCollection.deleteOne(query);
 

@@ -160,7 +160,7 @@ module.exports = (db) => {
         return res.status(400).send({ error: "Failed to delete link" });
       }
 
-      res.send({ message: "link deleted successfully" });
+      res.send({ message: "link deleted successfully", acknowledged: true });
     } catch (error) {
       res.status(500).send({ error: "Internal server error" });
     }
