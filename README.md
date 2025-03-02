@@ -1,27 +1,28 @@
-# TaskHandler
+# ShareLink
 
-TaskHandler is a task management platform built with React and Vite. It allows users to manage their tasks efficiently with features like drag-and-drop task management, user authentication, and more.
+ShareLink is a task management platform built with React and Vite. It allows users to manage their tasks efficiently with features like drag-and-drop task management, user authentication, and more.
 
 ## Live Links
-- [Live Demo](https://my-task-handler.web.app/)
+- [Live Demo](https://share-link-c8efb.web.app/)
 
 ## Technologies Used
-- Frontend:
-
+### Frontend:
 - React
 - React Router
 - TailwindCSS
 - DaisyUI
-- DnD Kit
 - React Hook Form
 - React Toastify
 - React Helmet Async
 
-- Backend:
-- Firebase Authentication
-- Custom Backend API (Node.js/Express)
+### Backend:
+- Node.js
+- Express
+- MongoDB
+- Google Drive API
+- JWT Authentication
 
-- Build Tools:
+### Build Tools:
 - Vite
 - ESLint
 
@@ -36,9 +37,17 @@ TaskHandler is a task management platform built with React and Vite. It allows u
 - React Toastify: ^11.0.3
 - React Helmet Async: ^2.0.5
 - DnD Kit: ^6.3.1
+- Express: ^4.21.2
+- MongoDB: ^6.12.0
+- Google APIs: ^146.0.0
+- JSON Web Token: ^9.0.2
+- Multer: ^1.4.5-lts.1
+- Cookie Parser: ^1.4.7
+- CORS: ^2.8.5
+- Dotenv: ^16.4.7
 
 ## Installation Steps
 1. Clone the repository:
    ```sh
-   git clone https://github.com/MethuParoi/taskhandler.git
-   cd taskhandler# job-task-backend
+   git clone https://github.com/MethuParoi/job-task-backend.git
+   cd taskHandler
