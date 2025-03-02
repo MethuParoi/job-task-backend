@@ -94,7 +94,10 @@ module.exports = (db) => {
       if (!user) {
         return res.status(404).send({ error: "User not found" });
       }
-      res.send(user.link);
+      if (!user.link) {
+        return res.status(404).send({ error: "Link not found" });
+      }
+      res.status(200).send(user.link);
     } catch (error) {
       res.status(500).send({ error: "Failed to get link" });
     }
