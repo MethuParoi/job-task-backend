@@ -63,22 +63,47 @@ module.exports = (db) => {
   });
 
   //-------------------post link----------------
+  // router.post("/post-link/:email", async (req, res) => {
+  //   try {
+  //     const email = req.params.email;
+  //     const query = { email: email };
+  //     const user = await userCollection.findOne(query);
+  //     const newLink = Array.isArray(req.body.link)
+  //       ? req.body.link
+  //       : [req.body.link];
+  //     const update = {
+  //       $set: {
+  //         link: user && user.link ? [...user.link, ...newLink] : newLink,
+  //       },
+  //     };
+  //     const result = await userCollection.updateOne(query, update, {
+  //       upsert: true,
+  //     });
+  //     res.send(result);
+  //   } catch (error) {
+  //     res.status(500).send({ error: "Failed to update link" });
+  //   }
+  // });
   router.post("/post-link/:email", async (req, res) => {
     try {
       const email = req.params.email;
       const query = { email: email };
       const user = await userCollection.findOne(query);
+
       const newLink = Array.isArray(req.body.link)
         ? req.body.link
         : [req.body.link];
+
       const update = {
         $set: {
           link: user && user.link ? [...user.link, ...newLink] : newLink,
         },
       };
+
       const result = await userCollection.updateOne(query, update, {
         upsert: true,
       });
+
       res.send(result);
     } catch (error) {
       res.status(500).send({ error: "Failed to update link" });
@@ -100,6 +125,44 @@ module.exports = (db) => {
       res.status(200).send(user.link);
     } catch (error) {
       res.status(500).send({ error: "Failed to get link" });
+    }
+  });
+
+  // Delete link
+  router.delete("/delete-link/:email/:linkId", async (req, res) => {
+    try {
+      const { email, linkId } = req.params; // Extract email and linkId from params
+      //convert task id to number
+      const linkIdNum = Number(linkId);
+
+      // Find the user by email
+      const query = { email };
+      const user = await userCollection.findOne(query);
+
+      if (!user) {
+        return res.status(404).send({ error: "User not found" });
+      }
+
+      // Filter out the link with the given taskId
+      const updatedLinks = user.link.filter(
+        (link) => link.linkId !== linkIdNum
+      );
+
+      if (updatedLinks.length === user.link.length) {
+        return res.status(404).send({ error: "link not found" });
+      }
+
+      // Update the user's link array in the database
+      const update = { $set: { link: updatedLinks } };
+      const result = await userCollection.updateOne(query, update);
+
+      if (result.modifiedCount === 0) {
+        return res.status(400).send({ error: "Failed to delete link" });
+      }
+
+      res.send({ message: "link deleted successfully" });
+    } catch (error) {
+      res.status(500).send({ error: "Internal server error" });
     }
   });
 
@@ -160,44 +223,6 @@ module.exports = (db) => {
       }
 
       res.send({ message: "Task updated successfully" });
-    } catch (error) {
-      res.status(500).send({ error: "Internal server error" });
-    }
-  });
-
-  // Delete task
-  router.delete("/delete-task/:email/:taskId", async (req, res) => {
-    try {
-      const { email, taskId } = req.params; // Extract email and taskId from params
-      //convert task id to number
-      const taskIdNum = Number(taskId);
-
-      // Find the user by email
-      const query = { email };
-      const user = await userCollection.findOne(query);
-
-      if (!user) {
-        return res.status(404).send({ error: "User not found" });
-      }
-
-      // Filter out the task with the given taskId
-      const updatedTasks = user.task.filter(
-        (task) => task.taskId !== taskIdNum
-      );
-
-      if (updatedTasks.length === user.task.length) {
-        return res.status(404).send({ error: "task not found" });
-      }
-
-      // Update the user's task array in the database
-      const update = { $set: { task: updatedTasks } };
-      const result = await userCollection.updateOne(query, update);
-
-      if (result.modifiedCount === 0) {
-        return res.status(400).send({ error: "Failed to delete task" });
-      }
-
-      res.send({ message: "task deleted successfully" });
     } catch (error) {
       res.status(500).send({ error: "Internal server error" });
     }
